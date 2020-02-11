@@ -1,0 +1,68 @@
+#include <Adafruit_NeoPixel.h>
+
+// NeoPixel Ring simple sketch (c) 2013 Shae Erisson
+// Released under the GPLv3 license to match the rest of the
+// Adafruit NeoPixel library
+
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+ #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
+#endif
+
+// Which pin on the Arduino is connected to the NeoPixels?
+#define PIN        2 // On Trinket or Gemma, suggest changing this to 1
+
+// How many NeoPixels are attached to the Arduino?
+#define NUMPIXELS 4 // Popular NeoPixel ring size
+
+// When setting up the NeoPixel library, we tell it how many pixels,
+// and which pin to use to send signals. Note that for older NeoPixel
+// strips you might need to change the third parameter -- see the
+// strandtest example for more information on possible values.
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+#define DELAYVAL 500 // Time (in milliseconds) to pause between pixels
+int button1State = 0;
+int button2State = 0;
+
+void setup() {
+  pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  pixels.show();
+  Serial.begin(9600);
+  pinMode(3, INPUT);
+  pinMode(4, INPUT);////
+}
+
+void loop() {
+  int switchPin = digitalRead(3);
+  Serial.println(switchPin);
+  button1State = digitalRead(3);
+  button2State = digitalRead(4);
+  if(button1State == HIGH && button2State == LOW)
+  {
+    for(int i=0; i<NUMPIXELS; i++)
+    {
+      pixels.setPixelColor(i, pixels.Color(255,0,230));
+      pixels.show();
+      delay(100);
+    }
+  }
+  else if(button2State == HIGH && button1State == LOW)
+  {
+    for(int i=0; i<NUMPIXELS; i++)
+    {
+      pixels.setPixelColor(i, pixels.Color(130,0,1255));
+      pixels.show();
+      delay(100);
+    }
+  }
+  else if(button1State==LOW && button2State == LOW)
+  {
+    for(int i=0; i<NUMPIXELS; i++)
+    {
+      pixels.setPixelColor(i, pixels.Color(0,0,0));
+      pixels.show();
+      delay(100);
+    }
+  }
+}
